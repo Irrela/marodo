@@ -13,7 +13,9 @@
     "react-dom": "^18",
     "next": "14.0.4",
     "axios": "1.6.2",
-    "react-player": "2.14.1"
+    "react-player": "2.14.1",
+    "@headlessui/react": "1.7.17",
+    "@heroicons/react": "2.1.1"
   },
   "devDependencies": {
     "typescript": "^5",
