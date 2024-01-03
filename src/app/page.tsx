@@ -1,10 +1,10 @@
 "use client";
-import NavbarTail from "@/components/navbar";
+import Navbar from "@/components/navbar";
 
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <NavbarTail />
+      <Navbar />
     </div>
   );
 }

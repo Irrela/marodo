@@ -5,33 +5,34 @@ import Image from "next/image";
 import Navbar from "@/components/navbar";
 import { Subtitle, parseSRT } from "@/utils/subtitleParser";
 
-export default function Video() {
+export default function Audio() {
   const [mediaSource, setMediaSource] = useState<string | null>(null);
   const [isMediaDragging, setIsMediaDragging] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
-  const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
+  const [currentAudioTime, setCurrentVideoTime] = useState<number>(0);
   const subtitlesListRef = useRef<HTMLUListElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // 在组件内部定义一个状态来追踪用户是否正在主动滚动
-const [userScrolling, setUserScrolling] = useState(false);
+  const [userScrolling, setUserScrolling] = useState(false);
 
   useEffect(() => {
-    const videoElement = document.querySelector("video");
+    const audioElement = document.querySelector("audio");
 
     const handleTimeUpdate = () => {
-      if (videoElement) {
-        setCurrentVideoTime(videoElement.currentTime);
+      if (audioElement) {
+        setCurrentVideoTime(audioElement.currentTime);
       }
     };
 
-    if (videoElement) {
-      videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    if (audioElement) {
+      audioElement.addEventListener("timeupdate", handleTimeUpdate);
     }
 
     return () => {
-      if (videoElement) {
-        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      if (audioElement) {
+        audioElement.removeEventListener("timeupdate", handleTimeUpdate);
       }
     };
   }, [mediaSource]); // 仅在 mediaSource 变化时重新绑定监听器
@@ -41,8 +42,8 @@ const [userScrolling, setUserScrolling] = useState(false);
     if (subtitlesListRef.current && !userScrolling) {
       const currentSubtitleIndex = subtitles.findIndex(
         (subtitle) =>
-          currentVideoTime >= subtitle.startTime &&
-          currentVideoTime < subtitle.endTime
+          currentAudioTime >= subtitle.startTime &&
+          currentAudioTime < subtitle.endTime
       );
 
       // 如果找到了匹配的字幕
@@ -68,42 +69,44 @@ const [userScrolling, setUserScrolling] = useState(false);
         }
       }
     }
-  }, [currentVideoTime, subtitles]);
+  }, [currentAudioTime, subtitles]);
 
   useEffect(() => {
     // ...
-  
+
     const handleScroll = () => {
       if (subtitlesListRef.current) {
         // 用户正在主动滚动
         setUserScrolling(true);
-  
+
         // 在2秒后重置用户滚动状态
         setTimeout(() => {
           setUserScrolling(false);
         }, 5000);
-  
+
         // 其他滚动逻辑...
       }
     };
-  
+
     // 添加滚动事件监听器
     subtitlesListRef.current.addEventListener("scroll", handleScroll);
-  
+
     return () => {
       // 移除滚动事件监听器
       subtitlesListRef.current.removeEventListener("scroll", handleScroll);
     };
-  }, [currentVideoTime, subtitles]);
+  }, [currentAudioTime, subtitles]);
 
-  const handleMediaDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file && file.type.startsWith("video/")) {
-      const videoUrl = URL.createObjectURL(file);
-      setMediaSource(videoUrl);
+  const handleMediaDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const droppedFiles = e.dataTransfer.files;
+
+    if (droppedFiles.length > 0) {
+      const mediaFile = droppedFiles[0];
+      const mediaUrl = URL.createObjectURL(mediaFile);
+
+      setMediaSource(mediaUrl);
     }
-    setIsMediaDragging(false);
   };
 
   const handleMediaDragOver = (event: { preventDefault: () => void }) => {
@@ -141,11 +144,11 @@ const [userScrolling, setUserScrolling] = useState(false);
   };
 
   const handleClickSubtitle = (startTimeStr: number) => {
-    const videoElement = document.querySelector("video");
+    const audioElement = document.querySelector("audio");
 
-    if (videoElement) {
+    if (audioElement) {
       if (!isNaN(startTimeStr) && isFinite(startTimeStr)) {
-        videoElement.currentTime = startTimeStr;
+        audioElement.currentTime = startTimeStr;
       } else {
         console.error("Invalid startTime:", startTimeStr);
       }
@@ -167,15 +170,13 @@ const [userScrolling, setUserScrolling] = useState(false);
             onDragOver={handleMediaDragOver}
             onDragLeave={handleMediaDragLeave}
           >
-            {/* Media player area */}
+            {/* Audio player area */}
             {mediaSource && (
-              <video controls width="100%" height="auto">
-                <source src={mediaSource} type="video/mp4" />
-                <source src={mediaSource} type="video/mov" />
-                <source src={mediaSource} type="video/webm" />
-                <source src={mediaSource} type="video/ogg" />
-                Your browser does not support the video tag.
-              </video>
+              <audio controls autoPlay={isPlaying} className="w-full">
+                <source src={mediaSource} type="audio/mp3" />
+                <source src={mediaSource} type="audio/m4a" />
+                Your browser does not support the audio element.
+              </audio>
             )}
 
             {/* Drag-and-drop prompt */}
@@ -230,8 +231,8 @@ const [userScrolling, setUserScrolling] = useState(false);
                 <li
                   key={subtitle.number}
                   className={`flex justify-between gap-x-6 py-5 ${
-                    currentVideoTime >= subtitle.startTime &&
-                    currentVideoTime < subtitle.endTime
+                    currentAudioTime >= subtitle.startTime &&
+                    currentAudioTime < subtitle.endTime
                       ? "bg-zinc-100"
                       : ""
                   }`}
@@ -242,8 +243,8 @@ const [userScrolling, setUserScrolling] = useState(false);
                       src="/static/icons/sub_playing.gif"
                       alt="button image"
                       className={`drop-shadow-lg h-3 w-3 ${
-                        currentVideoTime >= subtitle.startTime &&
-                        currentVideoTime < subtitle.endTime
+                        currentAudioTime >= subtitle.startTime &&
+                        currentAudioTime < subtitle.endTime
                           ? "visible"
                           : "invisible"
                       }`}
@@ -253,8 +254,8 @@ const [userScrolling, setUserScrolling] = useState(false);
                     <div className="min-w-0 flex-auto">
                       <p
                         className={`text-sm font-semibold leading-6 ${
-                          currentVideoTime >= subtitle.startTime &&
-                          currentVideoTime < subtitle.endTime
+                          currentAudioTime >= subtitle.startTime &&
+                          currentAudioTime < subtitle.endTime
                             ? "text-indigo-500" // 将当前播放的字幕变为紫色
                             : "text-gray-900"
                         }`}

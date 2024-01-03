@@ -7,7 +7,7 @@ import Link from "next/link";
 const navigation = [
   { name: "Dashboard", href: "/", current: false },
   { name: "Video", href: "/video", current: false },
-  { name: "Audio", href: "#", current: false },
+  { name: "Audio", href: "/audio", current: false },
   { name: "Material", href: "#", current: false },
   { name: "Tool", href: "#", current: false },
 ];
@@ -16,7 +16,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function NavbarTail() {
+export default function Navbar() {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (

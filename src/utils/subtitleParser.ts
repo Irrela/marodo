@@ -49,7 +49,7 @@ export function parseSRT(srtContent: string | ArrayBuffer | null | undefined): S
 
 export const parseTimeToSeconds = (timeStr: string): number => {
   // 将时间字符串解析为时、分、秒和毫秒
-  const [, hours, minutes, seconds, milliseconds] = timeStr.match(/(\d{2}):(\d{2}):(\d{2}),(\d{3})/) || [];
+  const [, hours, minutes, seconds, milliseconds] = timeStr.match(/(\d{2}):(\d{2}):(\d{2})[,.](\d{3})/) || [];
 
   // 计算总秒数
   const totalSeconds = parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds);
