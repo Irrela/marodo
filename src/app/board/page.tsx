@@ -10,13 +10,8 @@ export default function Board() {
   const [isMediaDragging, setIsMediaDragging] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
-
   const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
-
   const subtitlesListRef = useRef<HTMLUListElement | null>(null);
-
-  const [isUserScrolling, setIsUserScrolling] = useState(false);
-
 
   useEffect(() => {
     const videoElement = document.querySelector("video");
@@ -38,24 +33,25 @@ export default function Board() {
     };
   }, [mediaSource]); // 仅在 mediaSource 变化时重新绑定监听器
 
-
   // 在 useEffect 中添加滚动逻辑
-useEffect(() => {
+  useEffect(() => {
     if (subtitlesListRef.current) {
       const currentSubtitleIndex = subtitles.findIndex(
         (subtitle) =>
-          currentVideoTime >= subtitle.startTime && currentVideoTime < subtitle.endTime
+          currentVideoTime >= subtitle.startTime &&
+          currentVideoTime < subtitle.endTime
       );
-  
+
       // 如果找到了匹配的字幕
       if (currentSubtitleIndex !== -1) {
         // 计算这个字幕在列表中的位置
-        const itemHeight: number = subtitlesListRef.current.children[currentSubtitleIndex].offsetHeight;
+        const itemHeight: number =
+          subtitlesListRef.current.children[currentSubtitleIndex].offsetHeight;
         const scrollPosition =
           subtitlesListRef.current.children[currentSubtitleIndex].offsetTop -
           subtitlesListRef.current.clientHeight / 2 +
           itemHeight / 2;
-  
+
         // 滚动到这个位置
         subtitlesListRef.current.scrollTop = scrollPosition;
       }
@@ -185,17 +181,12 @@ useEffect(() => {
             onDragLeave={handleSubtitleDragLeave}
           >
             {/* Subtitles Area */}
-            {/* <ul
+            <ul
+              ref={subtitlesListRef}
               role="list"
               className="divide-y divide-black-100 overflow-y-auto"
               style={{ maxHeight: "80vh" }} // 设置最大高度
-            > */}
-            <ul
-  ref={subtitlesListRef}
-  role="list"
-  className="divide-y divide-black-100 overflow-y-auto"
-  style={{ maxHeight: "80vh" }} // 设置最大高度
->
+            >
               {" "}
               {subtitles.map((subtitle) => (
                 <li
@@ -203,7 +194,7 @@ useEffect(() => {
                   className={`flex justify-between gap-x-6 py-5 ${
                     currentVideoTime >= subtitle.startTime &&
                     currentVideoTime < subtitle.endTime
-                      ? "bg-zinc-100" 
+                      ? "bg-zinc-100"
                       : ""
                   }`}
                   onClick={() => handleClickSubtitle(subtitle.startTime)}
