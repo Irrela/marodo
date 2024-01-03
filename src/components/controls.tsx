@@ -13,7 +13,7 @@ export default function Controls() {
         className="mr-2 ml-2"
         onClick={onClick}
       />
-      <ImageButton src={"/static/icons/ic_next.svg"} onClick={onClick} />
+      <ImageButton src="/static/icons/ic_next.svg" onClick={onClick} />
       <ImageButton src="/static/icons/ic_repeat.svg" onClick={onClick} />
     </div>
   );

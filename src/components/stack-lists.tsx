@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 const people = [
     {
       name: 'Leslie Alexander',
