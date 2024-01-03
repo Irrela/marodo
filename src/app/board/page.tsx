@@ -11,6 +11,28 @@ export default function Board() {
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
 
+  const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
+
+  useEffect(() => {
+    const videoElement = document.querySelector("video");
+
+    const handleTimeUpdate = () => {
+      if (videoElement) {
+        setCurrentVideoTime(videoElement.currentTime);
+      }
+    };
+
+    if (videoElement) {
+      videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    }
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      }
+    };
+  }, [mediaSource]); // 仅在 mediaSource 变化时重新绑定监听器
+
   const handleMediaDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -155,7 +177,14 @@ export default function Board() {
                       height={0}
                     />
                     <div className="min-w-0 flex-auto">
-                      <p className="text-sm font-semibold leading-6 text-gray-900">
+                      <p
+                        className={`text-sm font-semibold leading-6 ${
+                          currentVideoTime >= subtitle.startTime &&
+                          currentVideoTime < subtitle.endTime
+                            ? "text-purple-500" // 将当前播放的字幕变为紫色
+                            : "text-gray-900"
+                        }`}
+                      >
                         {subtitle.text}
                       </p>
                     </div>
