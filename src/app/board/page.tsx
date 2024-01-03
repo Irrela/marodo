@@ -10,27 +10,6 @@ export default function Board() {
   const [isMediaDragging, setIsMediaDragging] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
-  const [currentVideoTime, setCurrentVideoTime] = useState(0);
-
-  useEffect(() => {
-    const videoElement = document.querySelector("video");
-
-    const handleTimeUpdate = () => {
-      if (videoElement) {
-        setCurrentVideoTime(videoElement.currentTime);
-      }
-    };
-
-    if (videoElement) {
-      videoElement.addEventListener("timeupdate", handleTimeUpdate);
-    }
-
-    return () => {
-      if (videoElement) {
-        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
-      }
-    };
-  }, []); // 确保只在组件挂载时添加和移除事件监听器
 
   const handleMediaDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
