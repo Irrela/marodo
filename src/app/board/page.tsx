@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 import NavbarTail from "@/components/navbar-tail";
@@ -59,12 +59,8 @@ export default function Board() {
     const videoElement = document.querySelector("video");
 
     if (videoElement) {
-      // 解析时间字符串为秒数
-      const startTimeInSeconds = startTimeStr;
-
-      // 检查 startTime 是否是有效的数值
-      if (!isNaN(startTimeInSeconds) && isFinite(startTimeInSeconds)) {
-        videoElement.currentTime = startTimeInSeconds;
+      if (!isNaN(startTimeStr) && isFinite(startTimeStr)) {
+        videoElement.currentTime = startTimeStr;
       } else {
         console.error("Invalid startTime:", startTimeStr);
       }
@@ -145,11 +141,11 @@ export default function Board() {
             >
               {" "}
               {subtitles.map((subtitle) => (
-               <li
-               key={subtitle.number}
-               className="flex justify-between gap-x-6 py-5"
-               onClick={() => handleClickSubtitle(subtitle.startTime)}
-             >
+                <li
+                  key={subtitle.number}
+                  className="flex justify-between gap-x-6 py-5"
+                  onClick={() => handleClickSubtitle(subtitle.startTime)}
+                >
                   <div className="flex min-w-0 gap-x-4 items-center">
                     <Image
                       src="/static/icons/sub_playing.gif"
