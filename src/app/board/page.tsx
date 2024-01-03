@@ -10,6 +10,27 @@ export default function Board() {
   const [isMediaDragging, setIsMediaDragging] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
+  const [currentVideoTime, setCurrentVideoTime] = useState(0);
+
+  useEffect(() => {
+    const videoElement = document.querySelector("video");
+
+    const handleTimeUpdate = () => {
+      if (videoElement) {
+        setCurrentVideoTime(videoElement.currentTime);
+      }
+    };
+
+    if (videoElement) {
+      videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    }
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      }
+    };
+  }, []); // 确保只在组件挂载时添加和移除事件监听器
 
   const handleMediaDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -55,22 +76,21 @@ export default function Board() {
     setIsSubtitleDragging(false);
   };
 
-  const handleClickSubtitle = (startTimeStr: string) => {
-    const videoElement = document.querySelector('video');
-  
+  const handleClickSubtitle = (startTimeStr: number) => {
+    const videoElement = document.querySelector("video");
+
     if (videoElement) {
       // 解析时间字符串为秒数
-      const startTimeInSeconds = parseTimeToSeconds(startTimeStr);
-  
+      const startTimeInSeconds = startTimeStr;
+
       // 检查 startTime 是否是有效的数值
       if (!isNaN(startTimeInSeconds) && isFinite(startTimeInSeconds)) {
         videoElement.currentTime = startTimeInSeconds;
       } else {
-        console.error('Invalid startTime:', startTimeStr);
+        console.error("Invalid startTime:", startTimeStr);
       }
     }
   };
-  
 
   return (
     <div className="flex flex-col">
@@ -146,11 +166,11 @@ export default function Board() {
             >
               {" "}
               {subtitles.map((subtitle) => (
-                <li
-                  key={subtitle.number}
-                  className="flex justify-between gap-x-6 py-5"
-                  onClick={() => handleClickSubtitle(subtitle.startTime)}
-                >
+               <li
+               key={subtitle.number}
+               className="flex justify-between gap-x-6 py-5"
+               onClick={() => handleClickSubtitle(subtitle.startTime)}
+             >
                   <div className="flex min-w-0 gap-x-4 items-center">
                     <Image
                       src="/static/icons/sub_playing.gif"

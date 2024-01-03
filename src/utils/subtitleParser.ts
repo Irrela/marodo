@@ -1,7 +1,7 @@
 export interface Subtitle {
   number: number;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
   text: string;
 }
 
@@ -29,8 +29,8 @@ export function parseSRT(srtContent: string | ArrayBuffer | null | undefined): S
 
     // 第二行是时间范围
     const timeRange = subtitleLines[1].trim().split(' --> ');
-    const startTime = timeRange[0];
-    const endTime = timeRange[1];
+    const startTime = parseTimeToSeconds(timeRange[0]);
+    const endTime = parseTimeToSeconds(timeRange[1]);
 
     // 剩下的是文本
     const text = subtitleLines.slice(2).join(' ');
