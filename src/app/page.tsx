@@ -1,12 +1,10 @@
-import AudioPlayer from "@/components/audioplayer";
-import Navbar from "@/components/navbar";
+"use client";
+import NavbarTail from "@/components/navbar";
 
 export default function Home() {
   return (
-    // <div className="flex justify-center items-center w-screen h-screen">
-    <div>
-    {/* <AudioPlayer /> */}
-      <Navbar />
+    <div className="flex flex-col">
+      <NavbarTail />
     </div>
   );
 }

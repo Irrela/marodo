@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
-import NavbarTail from "@/components/navbar-tail";
+import NavbarTail from "@/components/navbar";
 import { Subtitle, parseSRT } from "@/utils/subtitleParser";
 
 export default function Board() {
@@ -12,6 +12,9 @@ export default function Board() {
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
   const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
   const subtitlesListRef = useRef<HTMLUListElement | null>(null);
+
+  // 在组件内部定义一个状态来追踪用户是否正在主动滚动
+const [userScrolling, setUserScrolling] = useState(false);
 
   useEffect(() => {
     const videoElement = document.querySelector("video");
@@ -35,7 +38,7 @@ export default function Board() {
 
   // 在 useEffect 中添加滚动逻辑
   useEffect(() => {
-    if (subtitlesListRef.current) {
+    if (subtitlesListRef.current && !userScrolling) {
       const currentSubtitleIndex = subtitles.findIndex(
         (subtitle) =>
           currentVideoTime >= subtitle.startTime &&
@@ -65,6 +68,32 @@ export default function Board() {
         }
       }
     }
+  }, [currentVideoTime, subtitles]);
+
+  useEffect(() => {
+    // ...
+  
+    const handleScroll = () => {
+      if (subtitlesListRef.current) {
+        // 用户正在主动滚动
+        setUserScrolling(true);
+  
+        // 在2秒后重置用户滚动状态
+        setTimeout(() => {
+          setUserScrolling(false);
+        }, 5000);
+  
+        // 其他滚动逻辑...
+      }
+    };
+  
+    // 添加滚动事件监听器
+    subtitlesListRef.current.addEventListener("scroll", handleScroll);
+  
+    return () => {
+      // 移除滚动事件监听器
+      subtitlesListRef.current.removeEventListener("scroll", handleScroll);
+    };
   }, [currentVideoTime, subtitles]);
 
   const handleMediaDrop = (event: React.DragEvent<HTMLDivElement>) => {
