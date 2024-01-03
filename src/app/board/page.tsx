@@ -3,31 +3,31 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import NavbarTail from "@/components/navbar-tail";
-import { Subtitle, parseSRT } from "@/utils/subtitleParser";
+import { Subtitle, parseSRT, parseTimeToSeconds } from "@/utils/subtitleParser";
 
 export default function Board() {
-  const [videoSource, setVideoSource] = useState<string | null>(null);
-  const [isVideoDragging, setIsVideoDragging] = useState(false);
+  const [mediaSource, setMediaSource] = useState<string | null>(null);
+  const [isMediaDragging, setIsMediaDragging] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
 
-  const handleVideoDrop = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleMediaDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith("video/")) {
       const videoUrl = URL.createObjectURL(file);
-      setVideoSource(videoUrl);
+      setMediaSource(videoUrl);
     }
-    setIsVideoDragging(false);
+    setIsMediaDragging(false);
   };
 
-  const handleVideoDragOver = (event: { preventDefault: () => void }) => {
+  const handleMediaDragOver = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    setIsVideoDragging(true);
+    setIsMediaDragging(true);
   };
 
-  const handleVideoDragLeave = () => {
-    setIsVideoDragging(false);
+  const handleMediaDragLeave = () => {
+    setIsMediaDragging(false);
   };
 
   // DD FOR SUBS
@@ -55,6 +55,23 @@ export default function Board() {
     setIsSubtitleDragging(false);
   };
 
+  const handleClickSubtitle = (startTimeStr: string) => {
+    const videoElement = document.querySelector('video');
+  
+    if (videoElement) {
+      // 解析时间字符串为秒数
+      const startTimeInSeconds = parseTimeToSeconds(startTimeStr);
+  
+      // 检查 startTime 是否是有效的数值
+      if (!isNaN(startTimeInSeconds) && isFinite(startTimeInSeconds)) {
+        videoElement.currentTime = startTimeInSeconds;
+      } else {
+        console.error('Invalid startTime:', startTimeStr);
+      }
+    }
+  };
+  
+
   return (
     <div className="flex flex-col">
       <div>
@@ -64,36 +81,48 @@ export default function Board() {
         <div className="basis-3/5 p-5">
           <div
             className={`flex flex-col rounded-lg overflow-hidden border-2 border-dashed border-gray-300 ${
-              isVideoDragging ? "border-blue-500" : ""
-            } ${videoSource ? "border-none" : ""}`}
-            onDrop={handleVideoDrop}
-            onDragOver={handleVideoDragOver}
-            onDragLeave={handleVideoDragLeave}
+              isMediaDragging ? "border-blue-500" : ""
+            } ${mediaSource ? "border-none" : ""}`}
+            onDrop={handleMediaDrop}
+            onDragOver={handleMediaDragOver}
+            onDragLeave={handleMediaDragLeave}
           >
-            {/* Video player area */}
-            {videoSource && (
+            {/* Media player area */}
+            {mediaSource && (
               <video controls width="100%" height="auto">
-                <source src={videoSource} type="video/mp4" />
+                <source src={mediaSource} type="video/mp4" />
+                <source src={mediaSource} type="video/mov" />
+                <source src={mediaSource} type="video/webm" />
+                <source src={mediaSource} type="video/ogg" />
                 Your browser does not support the video tag.
               </video>
             )}
 
             {/* Drag-and-drop prompt */}
-            {!videoSource && (
+            {!mediaSource && (
               <div className="text-center p-4">
                 <p>Drag and drop a video file here to play.</p>
               </div>
             )}
           </div>
 
+          {/* Player control panel */}
           <div className="mt-4">
-            {/* Player control panel component goes here */}
             <div className="flex justify-center items-center">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+              <button className="bg-green-700 text-white px-4 py-2 rounded ml-2">
+                Prev
+              </button>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded ml-2">
                 Play
               </button>
               <button className="bg-red-500 text-white px-4 py-2 rounded ml-2">
                 Pause
+              </button>
+              <button className="bg-green-700 text-white px-4 py-2 rounded ml-2">
+                Next
+              </button>
+              <button className="bg-black text-white px-4 py-2 rounded-full ml-2">
+                Loop
               </button>
             </div>
           </div>
@@ -120,6 +149,7 @@ export default function Board() {
                 <li
                   key={subtitle.number}
                   className="flex justify-between gap-x-6 py-5"
+                  onClick={() => handleClickSubtitle(subtitle.startTime)}
                 >
                   <div className="flex min-w-0 gap-x-4 items-center">
                     <Image
