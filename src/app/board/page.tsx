@@ -1,7 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 
 import NavbarTail from "@/components/navbar-tail";
@@ -13,12 +11,8 @@ export default function Board() {
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
 
-  const handleVideoDrop = (event: {
-    preventDefault: () => void;
-    dataTransfer: { files: any[] };
-  }) => {
+  const handleVideoDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith("video/")) {
       const videoUrl = URL.createObjectURL(file);
@@ -37,12 +31,8 @@ export default function Board() {
   };
 
   // DD FOR SUBS
-  const handleSubtitleDrop = (event: {
-    preventDefault: () => void;
-    dataTransfer: { files: any[] };
-  }) => {
+  const handleSubtitleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-
     const file = event.dataTransfer.files[0];
     if (file && (file.type === "text/plain" || file.name.endsWith(".srt"))) {
       const reader = new FileReader();
@@ -120,7 +110,12 @@ export default function Board() {
             onDragLeave={handleSubtitleDragLeave}
           >
             {/* Subtitles Area */}
-            <ul role="list" className="divide-y divide-gray-100">
+            <ul
+              role="list"
+              className="divide-y divide-black-100 overflow-y-auto"
+              style={{ maxHeight: "80vh" }} // 设置最大高度
+            >
+              {" "}
               {subtitles.map((subtitle) => (
                 <li
                   key={subtitle.number}
