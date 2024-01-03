@@ -8,12 +8,15 @@ import NavbarTail from "@/components/navbar-tail";
 import { Subtitle, parseSRT } from "@/utils/subtitleParser";
 
 export default function Board() {
-  const [videoSource, setVideoSource] = useState(null);
+  const [videoSource, setVideoSource] = useState<string | null>(null);
   const [isVideoDragging, setIsVideoDragging] = useState(false);
-  const [subtitles, setSubtitles] = useState([]);
+  const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
 
-  const handleVideoDrop = (event) => {
+  const handleVideoDrop = (event: {
+    preventDefault: () => void;
+    dataTransfer: { files: any[] };
+  }) => {
     event.preventDefault();
 
     const file = event.dataTransfer.files[0];
@@ -24,7 +27,7 @@ export default function Board() {
     setIsVideoDragging(false);
   };
 
-  const handleVideoDragOver = (event) => {
+  const handleVideoDragOver = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setIsVideoDragging(true);
   };
@@ -34,7 +37,10 @@ export default function Board() {
   };
 
   // DD FOR SUBS
-  const handleSubtitleDrop = (event) => {
+  const handleSubtitleDrop = (event: {
+    preventDefault: () => void;
+    dataTransfer: { files: any[] };
+  }) => {
     event.preventDefault();
 
     const file = event.dataTransfer.files[0];
@@ -42,16 +48,15 @@ export default function Board() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const subtitleText = e.target?.result;
-        const parsedSubtitles: Subtitle[][] = parseSRT(subtitleText);
-        
-        setSubtitles([...parsedSubtitles]);
+        const parsedSubtitles: Subtitle[] = parseSRT(subtitleText);
+        setSubtitles(parsedSubtitles);
         setIsSubtitleDragging(false);
       };
       reader.readAsText(file);
     }
   };
 
-  const handleSubtitleDragOver = (event) => {
+  const handleSubtitleDragOver = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     setIsSubtitleDragging(true);
   };
