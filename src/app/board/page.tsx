@@ -44,16 +44,25 @@ export default function Board() {
 
       // 如果找到了匹配的字幕
       if (currentSubtitleIndex !== -1) {
-        // 计算这个字幕在列表中的位置
-        const itemHeight: number =
-          subtitlesListRef.current.children[currentSubtitleIndex].offsetHeight;
-        const scrollPosition =
-          subtitlesListRef.current.children[currentSubtitleIndex].offsetTop -
-          subtitlesListRef.current.clientHeight / 2 +
-          itemHeight / 2;
+        const list = subtitlesListRef.current;
+        const currentSubtitleElement = list.children[currentSubtitleIndex];
 
-        // 滚动到这个位置
-        subtitlesListRef.current.scrollTop = scrollPosition;
+        // 计算字幕元素底部相对于列表的位置
+        const subtitleBottom =
+          currentSubtitleElement.offsetTop +
+          currentSubtitleElement.offsetHeight;
+
+        // 如果字幕接近页面底部，触发滚动
+        if (subtitleBottom > list.scrollTop + list.clientHeight - 100) {
+          const itemHeight = currentSubtitleElement.offsetHeight;
+          const scrollPosition =
+            currentSubtitleElement.offsetTop -
+            list.clientHeight / 2 +
+            itemHeight / 2;
+
+          // 滚动到这个位置
+          list.scrollTop = scrollPosition;
+        }
       }
     }
   }, [currentVideoTime, subtitles]);

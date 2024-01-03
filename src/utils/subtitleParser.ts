@@ -59,3 +59,12 @@ export const parseTimeToSeconds = (timeStr: string): number => {
 
   return totalSecondsWithMilliseconds;
 };
+
+
+// 添加一个简单的缓动函数，使得动画更加平滑
+export function easeInOutQuad(t: number, b: number, c: number, d: number): number {
+  t /= d / 2;
+  if (t < 1) return (c / 2) * t * t + b;
+  t--;
+  return (-c / 2) * (t * (t - 2) - 1) + b;
+}
