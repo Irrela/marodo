@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 import NavbarTail from "@/components/navbar-tail";
-import { Subtitle, parseSRT, parseTimeToSeconds } from "@/utils/subtitleParser";
+import { Subtitle, parseSRT } from "@/utils/subtitleParser";
 
 export default function Board() {
   const [mediaSource, setMediaSource] = useState<string | null>(null);
@@ -165,14 +165,24 @@ export default function Board() {
               {subtitles.map((subtitle) => (
                 <li
                   key={subtitle.number}
-                  className="flex justify-between gap-x-6 py-5"
+                  className={`flex justify-between gap-x-6 py-5 ${
+                    currentVideoTime >= subtitle.startTime &&
+                    currentVideoTime < subtitle.endTime
+                      ? "bg-zinc-100" 
+                      : ""
+                  }`}
                   onClick={() => handleClickSubtitle(subtitle.startTime)}
                 >
-                  <div className="flex min-w-0 gap-x-4 items-center">
+                  <div className="flex min-w-0 gap-x-4 items-center pl-3">
                     <Image
                       src="/static/icons/sub_playing.gif"
                       alt="button image"
-                      className="drop-shadow-lg h-3 w-3"
+                      className={`drop-shadow-lg h-3 w-3 ${
+                        currentVideoTime >= subtitle.startTime &&
+                        currentVideoTime < subtitle.endTime
+                          ? "visible"
+                          : "invisible"
+                      }`}
                       width={0}
                       height={0}
                     />
@@ -181,7 +191,7 @@ export default function Board() {
                         className={`text-sm font-semibold leading-6 ${
                           currentVideoTime >= subtitle.startTime &&
                           currentVideoTime < subtitle.endTime
-                            ? "text-purple-500" // 将当前播放的字幕变为紫色
+                            ? "text-indigo-500" // 将当前播放的字幕变为紫色
                             : "text-gray-900"
                         }`}
                       >
