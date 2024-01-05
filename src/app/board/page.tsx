@@ -61,7 +61,7 @@ export default function Board() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-slate-200">
       <div className="pb-3">
         <Navbar />
       </div>
@@ -96,13 +96,31 @@ export default function Board() {
         )}
       </div>
 
+      {/* Desc */}
+      <div className="flex items-center px-5 py-2">
+        <div className="mr-3">
+          <Image
+            className="rounded-lg"
+            src="/static/icons/npr_indicator.jpeg"
+            alt="Your Image"
+            width={80}
+            height={80}
+          />
+        </div>
+        <div>
+          <p className="text-lg font-bold">
+            WTF is a bitcoin ETF?
+          </p>
+          <p>
+            2024-1-5
+          </p>
+        </div>
+      </div>
+
       {/* Board Area */}
-      <div className="p-3">
-        <div className="flex flex-col p-7 rounded-lg overflow-hidden border-2 border-amber-700 bg-white">
-          <div
-            className="h-20 overflow-y-auto"
-            style={{ maxHeight: "20rem" }} // 调整最大高度，根据需要修改
-          >
+      <div className="px-5">
+        <div className="flex flex-col p-7 rounded-lg overflow-hidden border-2 border-gray-700 bg-white">
+          <div className="h-24 overflow-y-auto">
             {subtitles
               .filter(
                 (subtitle) =>
