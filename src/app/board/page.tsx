@@ -97,21 +97,21 @@ export default function Board() {
       </div>
 
       {/* Desc */}
-      <div className="flex items-center px-5 py-2">
+      <div className="flex items-center px-5 pt-5 pb-2">
         <div className="mr-3">
           <Image
             className="rounded-lg"
             src="/static/icons/npr_indicator.jpeg"
             alt="Your Image"
-            width={80}
-            height={80}
+            width={70}
+            height={70}
           />
         </div>
         <div>
           <p className="text-lg font-bold">
             WTF is a bitcoin ETF?
           </p>
-          <p>
+          <p className="text-xs font-light">
             2024-1-5
           </p>
         </div>
@@ -119,7 +119,7 @@ export default function Board() {
 
       {/* Board Area */}
       <div className="px-5">
-        <div className="flex flex-col p-7 rounded-lg overflow-hidden border-2 border-gray-700 bg-white">
+        <div className="flex flex-col p-7 rounded-lg overflow-hidden border-1 border-white bg-black">
           <div className="h-24 overflow-y-auto">
             {subtitles
               .filter(
@@ -128,7 +128,7 @@ export default function Board() {
                   subtitle.endTime >= currentTime
               )
               .map((subtitle, index) => (
-                <p className="" key={index}>
+                <p className="text-white" key={index}>
                   {subtitle.text}
                 </p>
               ))}
