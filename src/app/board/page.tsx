@@ -101,7 +101,7 @@ export default function Board() {
         <div className="mr-3">
           <Image
             className="rounded-lg"
-            src="/static/icons/npr_indicator.jpeg"
+            src="/static/icons/npr_planet_money.jpeg"
             alt="Your Image"
             width={70}
             height={70}
@@ -109,18 +109,18 @@ export default function Board() {
         </div>
         <div>
           <p className="text-lg font-bold">
-            WTF is a bitcoin ETF?
+          How to be better at hybrid work
           </p>
           <p className="text-xs font-light">
-            2024-1-5
+          2023-12-19
           </p>
         </div>
       </div>
 
       {/* Board Area */}
-      <div className="px-5">
+      <div className="px-5 pt-2 pb-10">
         <div className="flex flex-col p-7 rounded-lg overflow-hidden border-1 border-white bg-black">
-          <div className="h-24 overflow-y-auto">
+          <div className="h-40 overflow-y-auto">
             {subtitles
               .filter(
                 (subtitle) =>

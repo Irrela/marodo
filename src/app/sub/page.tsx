@@ -241,7 +241,7 @@ export default function Audio() {
                             : "text-gray-900"
                         }`}
                       >
-                        {subtitle.text}
+                        {subtitle.number + "    " + subtitle.text}
                       </p>
                     </div>
                   </div>
