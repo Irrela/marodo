@@ -10,9 +10,9 @@ export default function Board() {
   const [isMediaDragging, setIsMediaDragging] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [isSubtitleDragging, setIsSubtitleDragging] = useState(false);
-
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [currentTime, setCurrentTime] = useState(0);
 
   const handleMediaDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -76,7 +76,12 @@ export default function Board() {
       >
         {/* Audio player area */}
         {mediaSource && (
-          <audio controls autoPlay={isPlaying} className="w-full">
+          <audio
+            controls
+            autoPlay={isPlaying}
+            className="w-full"
+            onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+          >
             <source src={mediaSource} type="audio/mp3" />
             <source src={mediaSource} type="audio/m4a" />
             Your browser does not support the audio element.
@@ -91,19 +96,29 @@ export default function Board() {
         )}
       </div>
 
+      {/* Board Area */}
       <div className="p-3">
-        {" "}
         <div className="flex flex-col p-7 rounded-lg overflow-hidden border-2 border-amber-700 bg-white">
-          {subtitles.map((subtitle, index) => (
-            <p className="" key={index}>
-              {subtitle.text}
-            </p>
-          ))}
+          <div
+            className="h-20 overflow-y-auto"
+            style={{ maxHeight: "20rem" }} // 调整最大高度，根据需要修改
+          >
+            {subtitles
+              .filter(
+                (subtitle) =>
+                  subtitle.startTime <= currentTime &&
+                  subtitle.endTime >= currentTime
+              )
+              .map((subtitle, index) => (
+                <p className="" key={index}>
+                  {subtitle.text}
+                </p>
+              ))}
+          </div>
         </div>
       </div>
 
       <div className="flex flex-row justify-center">
-
         {/* Subtitles Area */}
         <div className="basis-2/5 p-5">
           <div
