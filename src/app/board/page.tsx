@@ -61,7 +61,10 @@ export default function Board() {
   };
 
   return (
-    <div className="flex flex-col bg-slate-200">
+    // <div className="flex flex-col bg-slate-200">
+    <div className="flex flex-col bg-orange-100">
+    {/* // <div className="flex flex-col bg-amber-100"> */}
+    {/* <div className="flex flex-col bg-red-50"> */}
       <div className="pb-3">
         <Navbar />
       </div>
@@ -101,7 +104,10 @@ export default function Board() {
         <div className="mr-3">
           <Image
             className="rounded-lg"
-            src="/static/icons/npr_planet_money.jpeg"
+            // src="/static/icons/ic_bloomberg_radio.png"
+            // src="/static/icons/ic_explainer.png"
+            src="/static/icons/ic_vox-todayexplained.webp"
+            // src="/static/icons/ic_atlas.png"
             alt="Your Image"
             width={70}
             height={70}
@@ -109,10 +115,10 @@ export default function Board() {
         </div>
         <div>
           <p className="text-lg font-bold">
-          How to be better at hybrid work
+          China's Microchip War
           </p>
           <p className="text-xs font-light">
-          2023-12-19
+          
           </p>
         </div>
       </div>

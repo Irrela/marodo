@@ -17,6 +17,80 @@ export default function Audio() {
   // 在组件内部定义一个状态来追踪用户是否正在主动滚动
   const [userScrolling, setUserScrolling] = useState(false);
 
+  // space控制播放暂停
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // 判断按下的键是否是空格键
+      if (event.code === "Space") {
+        event.preventDefault(); // 防止空格键触发页面滚动
+
+        const audioElement = document.querySelector("audio");
+
+        if (audioElement) {
+          if (audioElement.paused) {
+            audioElement.play();
+          } else {
+            audioElement.pause();
+          }
+
+          // 更新播放状态
+          setIsPlaying(!audioElement.paused);
+        }
+      }
+    };
+
+    // 添加键盘事件监听器
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 移除键盘事件监听器
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPlaying]); // 请确保将所有依赖项传递给 useEffect
+
+  // 上一句，下一句
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const audioElement = document.querySelector("audio");
+
+      if (audioElement) {
+        // 获取当前播放的字幕索引
+        const currentSubtitleIndex = subtitles.findIndex(
+          (subtitle) =>
+            currentAudioTime >= subtitle.startTime &&
+            currentAudioTime < subtitle.endTime
+        );
+
+        switch (event.code) {
+          case "ArrowUp":
+            // 上箭头，跳转到上一句
+            if (currentSubtitleIndex > 0) {
+              const prevSubtitle = subtitles[currentSubtitleIndex - 1];
+              audioElement.currentTime = prevSubtitle.startTime;
+            }
+            break;
+          case "ArrowDown":
+            // 下箭头，跳转到下一句
+            if (currentSubtitleIndex < subtitles.length - 1) {
+              const nextSubtitle = subtitles[currentSubtitleIndex + 1];
+              audioElement.currentTime = nextSubtitle.startTime;
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    // 添加键盘事件监听器
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 移除键盘事件监听器
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentAudioTime, subtitles]);
+
   useEffect(() => {
     const audioElement = document.querySelector("audio");
 
@@ -279,7 +353,6 @@ export default function Audio() {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );
